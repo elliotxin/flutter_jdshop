@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import '../service/service_method.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -10,7 +11,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   String homePageContent = '正在获取数据';
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,9 +29,7 @@ class _HomePageState extends State<HomePage> {
                 ],
               );
             } else {
-              return Center(
-                child: Text('加载中'),
-              );
+              return Center(child: Text('加载中.......'));
             }
           },
         ));
@@ -44,8 +42,13 @@ class SwiperDiy extends StatelessWidget {
   SwiperDiy({this.swiperDateList});
   @override
   Widget build(BuildContext context) {
+    ScreenUtil.instance = ScreenUtil(width: 750, height: 1334)..init(context);
+    print('设备的像素密度：${ScreenUtil.pixelRatio}');
+    print('设备的高：${ScreenUtil.screenHeight}');
+    print('设备的宽：${ScreenUtil.screenWidth}');
     return Container(
-      height: 333,
+      height: ScreenUtil().setHeight(333),
+      width: ScreenUtil().setWidth(750),
       child: Swiper(
         itemBuilder: (BuildContext context, int index) {
           return Image.network(
