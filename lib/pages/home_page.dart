@@ -12,8 +12,17 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage>
     with AutomaticKeepAliveClientMixin {
+  int page = 1;
+  List<Map> hotGoodsList = [];
   @override
   bool get wantKeepAlive => true;
+
+  @override
+  void initState() {
+    _getHotGoods();
+    super.initState();
+  }
+
   String homePageContent = '正在获取数据';
   @override
   Widget build(BuildContext context) {
@@ -24,7 +33,7 @@ class _HomePageState extends State<HomePage>
           title: Text('百姓生活+'),
         ),
         body: FutureBuilder(
-          future: request('homePageContext',formData),
+          future: request('homePageContext', formData: formData),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               //数据处理
@@ -60,7 +69,7 @@ class _HomePageState extends State<HomePage>
                     FloorContent(floor2),
                     FloorTitle(floor3Title),
                     FloorContent(floor3),
-                    HotGoods(),
+                    _hotGoods(),
                   ],
                 ),
               );
@@ -69,6 +78,78 @@ class _HomePageState extends State<HomePage>
             }
           },
         ));
+  }
+
+  void _getHotGoods() {
+    var formData = {'page': page};
+    request('homePageBelowConten', formData: formData).then((val) {
+      var data = json.decode(val.toString());
+      List<Map> newGoodsList = (data['data'] as List).cast();
+      setState(() {
+        hotGoodsList.addAll(newGoodsList);
+        page++;
+      });
+    });
+  }
+
+  Widget hotTitle = Container(
+    margin: EdgeInsets.only(top: 10),
+    alignment: Alignment.center,
+    color: Colors.transparent,
+    padding: EdgeInsets.all(5),
+    child: Text('火爆专区'),
+  );
+
+  Widget _wrapList() {
+    if (hotGoodsList.length != 0) {
+      List<Widget> listWidget = hotGoodsList.map((val) {
+        return InkWell(
+          onTap: () {},
+          child: Container(
+            width: ScreenUtil().setWidth(372),
+            color: Colors.white,
+            padding: EdgeInsets.all(5),
+            margin: EdgeInsets.only(bottom: 3),
+            child: Column(
+              children: <Widget>[
+                Image.network(val['image'], width: ScreenUtil().setWidth(370)),
+                Text(val['name'],
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                        color: Colors.pink, fontSize: ScreenUtil().setSp(26))),
+                Row(
+                  children: <Widget>[
+                    Text('¥${val['mallPrice']}'),
+                    Text('¥${val['price']}',
+                        style: TextStyle(
+                            color: Colors.black26,
+                            decoration: TextDecoration.lineThrough)),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      }).toList();
+      return Wrap(
+        spacing: 2,
+        children: listWidget,
+      );
+    } else {
+      return Text('');
+    }
+  }
+
+  Widget _hotGoods() {
+    return Container(
+      child: Column(
+        children: <Widget>[
+          hotTitle,
+          _wrapList(),
+        ],
+      ),
+    );
   }
 }
 
@@ -311,27 +392,6 @@ class FloorContent extends StatelessWidget {
         },
         child: Image.network(goods['image']),
       ),
-    );
-  }
-}
-
-class HotGoods extends StatefulWidget {
-  _HotGoodsState createState() => _HotGoodsState();
-}
-
-class _HotGoodsState extends State<HotGoods> {
-  @override
-  void initState() {
-    request('homePageBelowConten', 1).then((val) {
-      print(val);
-    });
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Text('Elliot'),
     );
   }
 }
