@@ -5,6 +5,7 @@ import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -25,6 +26,7 @@ class _HomePageState extends State<HomePage>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     var formData = {'lon': '115.02932', 'lat': '35.76189'};
     return Scaffold(
         resizeToAvoidBottomInset: false,
@@ -162,10 +164,15 @@ class SwiperDiy extends StatelessWidget {
       width: ScreenUtil().setWidth(750),
       child: Swiper(
         itemBuilder: (BuildContext context, int index) {
-          return Image.network(
-            '${swiperDateList[index]['image']}',
+          return CachedNetworkImage(
+            imageUrl: '${swiperDateList[index]['image']}',
             fit: BoxFit.fill,
           );
+
+          // Image.network(
+          //   '${swiperDateList[index]['image']}',
+          //   fit: BoxFit.fill,
+          // );
         },
         itemCount: swiperDateList.length,
         pagination: SwiperPagination(),
@@ -186,7 +193,11 @@ class TopNavigator extends StatelessWidget {
       },
       child: Column(
         children: <Widget>[
-          Image.network(item['image'], width: ScreenUtil().setWidth(95)),
+          CachedNetworkImage(
+            imageUrl: item['image'],
+            width: ScreenUtil().setWidth(95),
+          ),
+          // Image.network(item['image'], width: ScreenUtil().setWidth(95)),
           Text(item['mallCategoryName'])
         ],
       ),
@@ -220,8 +231,11 @@ class AdBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Image.network(adPicture),
-    );
+        child: CachedNetworkImage(
+      imageUrl: adPicture,
+    )
+        // Image.network(adPicture),
+        );
   }
 }
 
@@ -236,7 +250,10 @@ class LeaderPhone extends StatelessWidget {
     return Container(
       child: InkWell(
         onTap: _launchUR,
-        child: Image.network(leaderImage),
+        child: CachedNetworkImage(
+          imageUrl: leaderImage,
+        ),
+        // Image.network(leaderImage),
       ),
     );
   }
@@ -287,7 +304,10 @@ class Recommend extends StatelessWidget {
             )),
         child: Column(
           children: <Widget>[
-            Image.network(recommendList[index]['image']),
+            CachedNetworkImage(
+              imageUrl: recommendList[index]['image'],
+            ),
+            // Image.network(recommendList[index]['image']),
             Text('¥${recommendList[index]['mallPrice']}'),
             Text('¥${recommendList[index]['price']}',
                 style: TextStyle(
@@ -338,7 +358,10 @@ class FloorTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(8),
-      child: Image.network(pictureAddress),
+      child: CachedNetworkImage(
+        imageUrl: pictureAddress,
+      ),
+      // Image.network(pictureAddress),
     );
   }
 }
@@ -389,7 +412,10 @@ class FloorContent extends StatelessWidget {
         onTap: () {
           print('点击了楼层商品');
         },
-        child: Image.network(goods['image']),
+        child: CachedNetworkImage(
+          imageUrl: goods['image'],
+        ),
+        // Image.network(goods['image']),
       ),
     );
   }

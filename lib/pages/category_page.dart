@@ -1,7 +1,4 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter_jdshop/model/category.dart';
-import '../service/service_method.dart';
 
 class CategoryPage extends StatefulWidget {
   @override
@@ -11,7 +8,7 @@ class CategoryPage extends StatefulWidget {
 class _CategoryPageState extends State<CategoryPage> {
   @override
   Widget build(BuildContext context) {
-    _getCategory();
+    // _getCategory();
     return Container(
       child: Center(
         child: Text('分类页面'),
@@ -19,11 +16,11 @@ class _CategoryPageState extends State<CategoryPage> {
     );
   }
 
-  void _getCategory() async {
-    await request('getCategory').then((val) {
-      var data = json.decode(val.toString());
-      CategoryBigListModel list = CategoryBigListModel.fromJson(data['data']);
-      list.data.forEach((item) => print(item.mallCategoryName));
-    });
-  }
+  // void _getCategory() async {
+  //   await request('getCategory').then((val) {
+  //     var data = json.decode(val.toString());
+  //     CategoryBigListModel list = CategoryBigListModel.fromJson(data['data']);
+  //     list.data.forEach((item) => print(item.mallCategoryName));
+  //   });
+  // }
 }
