@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../service/service_method.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -21,14 +22,24 @@ class _HomePageState extends State<HomePage> {
           future: getHomePageContnet(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
+              //数据处理
               var data = json.decode(snapshot.data.toString());
               List<Map> swiper = (data['data']['slides'] as List).cast();
               List<Map> navigtorList =
                   (data['data']['category'] as List).cast();
+              String adPicture =
+                  data['data']['advertesPicture']['PICTURE_ADDRESS'];
+              String leaderImage = data['data']['shopInfo']['leaderImage'];
+              String leaderPhone = data['data']['shopInfo']['leaderPhone'];
               return Column(
                 children: <Widget>[
                   SwiperDiy(swiperDateList: swiper),
                   TopNavigator(navigatorList: navigtorList),
+                  AdBanner(
+                    adPicture: adPicture,
+                  ),
+                  LeaderPhone(
+                      leaderImage: leaderImage, leaderPhone: leaderPhone),
                 ],
               );
             } else {
@@ -63,6 +74,7 @@ class SwiperDiy extends StatelessWidget {
   }
 }
 
+//顶部导航
 class TopNavigator extends StatelessWidget {
   final List navigatorList;
   TopNavigator({this.navigatorList});
@@ -96,5 +108,43 @@ class TopNavigator extends StatelessWidget {
         }).toList(),
       ),
     );
+  }
+}
+
+//广告区域
+class AdBanner extends StatelessWidget {
+  final String adPicture;
+  AdBanner({this.adPicture});
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Image.network(adPicture),
+    );
+  }
+}
+
+//拨打电话模块
+class LeaderPhone extends StatelessWidget {
+  final String leaderImage;
+  final String leaderPhone;
+  LeaderPhone({this.leaderImage, this.leaderPhone});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: InkWell(
+        onTap: _launchUR,
+        child: Image.network(leaderImage),
+      ),
+    );
+  }
+
+  void _launchUR() async {
+    String url = 'tel:' + leaderPhone;
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'URL不能进行访问，异常';
+    }
   }
 }
