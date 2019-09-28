@@ -37,17 +37,28 @@ class _HomePageState extends State<HomePage>
               String leaderPhone = data['data']['shopInfo']['leaderPhone'];
               List<Map> recommendList =
                   (data['data']['recommend'] as List).cast();
+              String floor1Title = data['data']['floor1Pic']['PICTURE_ADDRESS'];
+              String floor2Title = data['data']['floor2Pic']['PICTURE_ADDRESS'];
+              String floor3Title = data['data']['floor3Pic']['PICTURE_ADDRESS'];
+              List<Map> floor1 = (data['data']['floor1'] as List).cast();
+              List<Map> floor2 = (data['data']['floor2'] as List).cast();
+              List<Map> floor3 = (data['data']['floor3'] as List).cast();
               return SingleChildScrollView(
                 child: Column(
                   children: <Widget>[
-                    SwiperDiy(swiperDateList: swiper),
-                    TopNavigator(navigatorList: navigtorList),
+                    SwiperDiy(swiper),
+                    TopNavigator(navigtorList),
                     AdBanner(
-                      adPicture: adPicture,
+                      adPicture,
                     ),
-                    LeaderPhone(
-                        leaderImage: leaderImage, leaderPhone: leaderPhone),
+                    LeaderPhone(leaderImage, leaderPhone),
                     Recommend(recommendList),
+                    FloorTitle(floor1Title),
+                    FloorContent(floor1),
+                    FloorTitle(floor2Title),
+                    FloorContent(floor2),
+                    FloorTitle(floor3Title),
+                    FloorContent(floor3),
                   ],
                 ),
               );
@@ -62,7 +73,7 @@ class _HomePageState extends State<HomePage>
 //首页轮播组件
 class SwiperDiy extends StatelessWidget {
   final List swiperDateList;
-  SwiperDiy({this.swiperDateList});
+  SwiperDiy(this.swiperDateList);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -86,7 +97,7 @@ class SwiperDiy extends StatelessWidget {
 //顶部导航
 class TopNavigator extends StatelessWidget {
   final List navigatorList;
-  TopNavigator({this.navigatorList});
+  TopNavigator(this.navigatorList);
   Widget _gridViewItemUI(BuildContext context, item) {
     return InkWell(
       onTap: () {
@@ -123,7 +134,7 @@ class TopNavigator extends StatelessWidget {
 //广告区域
 class AdBanner extends StatelessWidget {
   final String adPicture;
-  AdBanner({this.adPicture});
+  AdBanner(this.adPicture);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -136,7 +147,7 @@ class AdBanner extends StatelessWidget {
 class LeaderPhone extends StatelessWidget {
   final String leaderImage;
   final String leaderPhone;
-  LeaderPhone({this.leaderImage, this.leaderPhone});
+  LeaderPhone(this.leaderImage, this.leaderPhone);
 
   @override
   Widget build(BuildContext context) {
@@ -231,6 +242,72 @@ class Recommend extends StatelessWidget {
           _titleWidget(),
           _recommendList(),
         ],
+      ),
+    );
+  }
+}
+
+//楼层标题
+class FloorTitle extends StatelessWidget {
+  final String pictureAddress;
+  FloorTitle(this.pictureAddress);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(8),
+      child: Image.network(pictureAddress),
+    );
+  }
+}
+
+//楼层商品列表
+class FloorContent extends StatelessWidget {
+  final List floorGoodsList;
+  FloorContent(this.floorGoodsList);
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Column(
+        children: <Widget>[
+          _firstRow(),
+          _otherGoods(),
+        ],
+      ),
+    );
+  }
+
+  Widget _firstRow() {
+    return Row(
+      children: <Widget>[
+        _goodsItem(floorGoodsList[0]),
+        Column(
+          children: <Widget>[
+            _goodsItem(floorGoodsList[1]),
+            _goodsItem(floorGoodsList[2]),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _otherGoods() {
+    return Row(
+      children: <Widget>[
+        _goodsItem(floorGoodsList[3]),
+        _goodsItem(floorGoodsList[4]),
+      ],
+    );
+  }
+
+  Widget _goodsItem(Map goods) {
+    return Container(
+      width: ScreenUtil().setWidth(375),
+      child: InkWell(
+        onTap: () {
+          print('点击了楼层商品');
+        },
+        child: Image.network(goods['image']),
       ),
     );
   }
