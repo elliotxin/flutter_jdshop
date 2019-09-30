@@ -1,0 +1,90 @@
+Flutter crash report; please file at https://github.com/flutter/flutter/issues.
+
+## command
+
+flutter run -d 305cb49ad3da91f0642f65f7f8038f8f514e8987
+
+## exception
+
+IOSDeviceNotFoundError: ideviceinfo could not find device:
+No device found with udid 305cb49ad3da91f0642f65f7f8038f8f514e8987, is it plugged in?
+. Try unlocking attached devices.
+
+```
+#0      IMobileDevice.getInfoForDevice (package:flutter_tools/src/ios/mac.dart:212:9)
+<asynchronous suspension>
+#1      IOSDevice.startApp (package:flutter_tools/src/ios/devices.dart:271:58)
+<asynchronous suspension>
+#2      FlutterDevice.runHot (package:flutter_tools/src/resident_runner.dart:378:54)
+<asynchronous suspension>
+#3      HotRunner.run (package:flutter_tools/src/run_hot.dart:254:39)
+<asynchronous suspension>
+#4      RunCommand.runCommand (package:flutter_tools/src/commands/run.dart:472:37)
+<asynchronous suspension>
+#5      FlutterCommand.verifyThenRunCommand (package:flutter_tools/src/runner/flutter_command.dart:490:18)
+#6      _asyncThenWrapperHelper.<anonymous closure> (dart:async-patch/async_patch.dart:71:64)
+#7      _rootRunUnary (dart:async/zone.dart:1132:38)
+#8      _CustomZone.runUnary (dart:async/zone.dart:1029:19)
+#9      _FutureListener.handleValue (dart:async/future_impl.dart:137:18)
+#10     Future._propagateToListeners.handleValueCallback (dart:async/future_impl.dart:678:45)
+#11     Future._propagateToListeners (dart:async/future_impl.dart:707:32)
+#12     Future._completeWithValue (dart:async/future_impl.dart:522:5)
+#13     _AsyncAwaitCompleter.complete (dart:async-patch/async_patch.dart:30:15)
+#14     _completeOnAsyncReturn (dart:async-patch/async_patch.dart:288:13)
+#15     RunCommand.usageValues (package:flutter_tools/src/commands/run.dart)
+#16     _asyncThenWrapperHelper.<anonymous closure> (dart:async-patch/async_patch.dart:71:64)
+#17     _rootRunUnary (dart:async/zone.dart:1132:38)
+#18     _CustomZone.runUnary (dart:async/zone.dart:1029:19)
+#19     _FutureListener.handleValue (dart:async/future_impl.dart:137:18)
+#20     Future._propagateToListeners.handleValueCallback (dart:async/future_impl.dart:678:45)
+#21     Future._propagateToListeners (dart:async/future_impl.dart:707:32)
+#22     Future._completeWithValue (dart:async/future_impl.dart:522:5)
+#23     Future._asyncComplete.<anonymous closure> (dart:async/future_impl.dart:552:7)
+#24     _rootRun (dart:async/zone.dart:1124:13)
+#25     _CustomZone.run (dart:async/zone.dart:1021:19)
+#26     _CustomZone.runGuarded (dart:async/zone.dart:923:7)
+#27     _CustomZone.bindCallbackGuarded.<anonymous closure> (dart:async/zone.dart:963:23)
+#28     _microtaskLoop (dart:async/schedule_microtask.dart:41:21)
+#29     _startMicrotaskLoop (dart:async/schedule_microtask.dart:50:5)
+#30     _runPendingImmediateCallback (dart:isolate-patch/isolate_patch.dart:116:13)
+#31     _RawReceivePortImpl._handleMessage (dart:isolate-patch/isolate_patch.dart:173:5)
+```
+
+## flutter doctor
+
+```
+[32m[✓][39m Flutter (Channel stable, v1.9.1+hotfix.2, on Mac OS X 10.15 19A573a, locale en-US)
+    [32m•[39m Flutter version 1.9.1+hotfix.2 at /Users/elliot/Documents/flutter
+    [32m•[39m Framework revision 2d2a1ffec9 (3 weeks ago), 2019-09-06 18:39:49 -0700
+    [32m•[39m Engine revision b863200c37
+    [32m•[39m Dart version 2.5.0
+
+[33m[!][39m Android toolchain - develop for Android devices (Android SDK version 29.0.2)
+    [32m•[39m Android SDK at /Users/elliot/Library/Android/sdk
+    [32m•[39m Android NDK location not configured (optional; useful for native profiling support)
+    [32m•[39m Platform android-29, build-tools 29.0.2
+    [32m•[39m Java binary at: /Applications/Android Studio.app/Contents/jre/jdk/Contents/Home/bin/java
+    [32m•[39m Java version OpenJDK Runtime Environment (build 1.8.0_202-release-1483-b49-5587405)
+    [33m![39m Some Android licenses not accepted.  To resolve this, run: flutter doctor --android-licenses
+
+[32m[✓][39m Xcode - develop for iOS and macOS (Xcode 11.0)
+    [32m•[39m Xcode at /Applications/Xcode.app/Contents/Developer
+    [32m•[39m Xcode 11.0, Build version 11A420a
+    [32m•[39m CocoaPods version 1.7.5
+
+[32m[✓][39m Android Studio (version 3.5)
+    [32m•[39m Android Studio at /Applications/Android Studio.app/Contents
+    [32m•[39m Flutter plugin version 39.0.3
+    [32m•[39m Dart plugin version 191.8423
+    [32m•[39m Java version OpenJDK Runtime Environment (build 1.8.0_202-release-1483-b49-5587405)
+
+[32m[✓][39m VS Code (version 1.38.1)
+    [32m•[39m VS Code at /Applications/Visual Studio Code.app/Contents
+    [32m•[39m Flutter extension version 3.4.1
+
+[32m[✓][39m Connected device (2 available)
+    [32m•[39m Android SDK built for x86 • emulator-5554                            • android-x86 • Android 7.0 (API 24) (emulator)
+    [32m•[39m elliot xin’s iPad         • 305cb49ad3da91f0642f65f7f8038f8f514e8987 • ios         • iOS 13.1
+
+[33m![39m Doctor found issues in 1 category.
+```

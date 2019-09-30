@@ -2,7 +2,7 @@
 # This is a generated file; do not edit or check into version control.
 export "FLUTTER_ROOT=/Users/elliot/Documents/flutter"
 export "FLUTTER_APPLICATION_PATH=/Users/elliot/AndroidStudioProjects/flutter_jdshop"
-export "FLUTTER_TARGET=lib/main.dart"
+export "FLUTTER_TARGET=/Users/elliot/AndroidStudioProjects/flutter_jdshop/lib/main.dart"
 export "FLUTTER_BUILD_DIR=build"
 export "SYMROOT=${SOURCE_ROOT}/../build/ios"
 export "FLUTTER_FRAMEWORK_DIR=/Users/elliot/Documents/flutter/bin/cache/artifacts/engine/ios"
