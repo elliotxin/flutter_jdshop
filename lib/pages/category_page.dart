@@ -8,6 +8,7 @@ import '../provide/child_category.dart';
 import '../provide/category_goodsList.dart';
 import '../model/categoryGoodsList.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_easyrefresh/easy_refresh.dart';
 
 class CategoryPage extends StatefulWidget {
   @override
@@ -77,7 +78,8 @@ class _LeftCategoryNavState extends State<LeftCategoryNav> {
         });
         var childList = list[index].bxMallSubDto;
         var categoryId = list[index].mallCategoryId;
-        Provide.value<ChildCategory>(context).getChildCategory(childList);
+        Provide.value<ChildCategory>(context)
+            .getChildCategory(childList, categoryId);
         _getGoodsList(categoryId: categoryId);
       },
       child: Container(
@@ -105,7 +107,7 @@ class _LeftCategoryNavState extends State<LeftCategoryNav> {
         list = category.data;
       });
       Provide.value<ChildCategory>(context)
-          .getChildCategory(list[0].bxMallSubDto);
+          .getChildCategory(list[0].bxMallSubDto, list[0].mallCategoryId);
     });
   }
 
@@ -113,7 +115,7 @@ class _LeftCategoryNavState extends State<LeftCategoryNav> {
     var data = {
       'categoryId':
           categoryId == null ? '2c9f6c946cd22d7b016cd732f0f6002f' : categoryId,
-      'CategorySubId': '',
+      'categorySubId': '',
       'page': 1
     };
     await request('getMallGoods', formData: data).then((val) {
@@ -163,7 +165,9 @@ class _RightCategoryNavState extends State<RightCategoryNav> {
         : false;
     return InkWell(
       onTap: () {
-        Provide.value<ChildCategory>(context).changeChildIndex(index);
+        Provide.value<ChildCategory>(context)
+            .changeChildIndex(index, item.mallSubId);
+        _getGoodsList(item.mallSubId);
       },
       child: Container(
         padding: EdgeInsets.fromLTRB(5, 10, 5, 10),
@@ -176,6 +180,24 @@ class _RightCategoryNavState extends State<RightCategoryNav> {
       ),
     );
   }
+
+  void _getGoodsList(String categorySubId) async {
+    var data = {
+      'categoryId': Provide.value<ChildCategory>(context).categoryId,
+      'categorySubId': categorySubId == '00' ? '' : categorySubId,
+      'page': 1
+    };
+    await request('getMallGoods', formData: data).then((val) {
+      var data = json.decode(val.toString());
+      CategoryGoodsListModel goodsList = CategoryGoodsListModel.fromJson(data);
+      if (goodsList.data == null) {
+        Provide.value<CategoryGoodsListProvide>(context).getGoodsList([]);
+      } else {
+        Provide.value<CategoryGoodsListProvide>(context)
+            .getGoodsList(goodsList.data);
+      }
+    });
+  }
 }
 
 //商品列表
@@ -185,6 +207,7 @@ class CategoryGoodsList extends StatefulWidget {
 }
 
 class _CategoryGoodsListState extends State<CategoryGoodsList> {
+  var scorllController = ScrollController();
   @override
   void initState() {
     super.initState();
@@ -194,17 +217,35 @@ class _CategoryGoodsListState extends State<CategoryGoodsList> {
   Widget build(BuildContext context) {
     return Provide<CategoryGoodsListProvide>(
       builder: (context, child, data) {
-        return Expanded(
-          child: Container(
-            width: ScreenUtil().setWidth(570),
-            child: ListView.builder(
-              itemCount: data.goodsList.length,
-              itemBuilder: (context, index) {
-                return _listWidget(data.goodsList, index);
-              },
-            ),
-          ),
-        );
+        try {
+          if (Provide.value<ChildCategory>(context).page == 1) {
+            scorllController.jumpTo(0.0);
+          }
+        } catch (e) {}
+        if (data.goodsList.length > 0) {
+          return Expanded(
+            child: Container(
+                width: ScreenUtil().setWidth(570),
+                child: EasyRefresh(
+                  footer: ClassicalFooter(
+                      showInfo: true,
+                      noMoreText:
+                          Provide.value<ChildCategory>(context).noMoreText),
+                  child: ListView.builder(
+                    controller: scorllController,
+                    itemCount: data.goodsList.length,
+                    itemBuilder: (context, index) {
+                      return _listWidget(data.goodsList, index);
+                    },
+                  ),
+                  onLoad: () async {
+                    _getMoreList();
+                  },
+                )),
+          );
+        } else {
+          return Text('暂时没有数据');
+        }
       },
     );
   }
@@ -274,4 +315,25 @@ class _CategoryGoodsListState extends State<CategoryGoodsList> {
       ),
     );
   }
+
+  void _getMoreList() async {
+    Provide.value<ChildCategory>(context).addPage();
+    var data = {
+      'categoryId': Provide.value<ChildCategory>(context).categoryId,
+      'categorySubId': Provide.value<ChildCategory>(context).subId,
+      'page': Provide.value<ChildCategory>(context).page,
+    };
+    await request('getMallGoods', formData: data).then((val) {
+      var data = json.decode(val.toString());
+      CategoryGoodsListModel goodsList = CategoryGoodsListModel.fromJson(data);
+      if (goodsList.data == null) {
+        Provide.value<ChildCategory>(context).changeNoMore('没有更多了');
+      } else {
+        Provide.value<CategoryGoodsListProvide>(context)
+            .getMoreList(goodsList.data);
+      }
+    });
+  }
 }
+
+class RefreshFooterState {}
