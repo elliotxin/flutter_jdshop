@@ -111,7 +111,8 @@ class _LeftCategoryNavState extends State<LeftCategoryNav> {
 
   void _getGoodsList({String categoryId}) async {
     var data = {
-      'categoryId': categoryId == null ? '1' : categoryId,
+      'categoryId':
+          categoryId == null ? '2c9f6c946cd22d7b016cd732f0f6002f' : categoryId,
       'CategorySubId': '',
       'page': 1
     };
@@ -124,6 +125,7 @@ class _LeftCategoryNavState extends State<LeftCategoryNav> {
   }
 }
 
+//小类右侧导航
 class RightCategoryNav extends StatefulWidget {
   @override
   _RightCategoryNavState createState() => _RightCategoryNavState();
@@ -145,7 +147,8 @@ class _RightCategoryNavState extends State<RightCategoryNav> {
             scrollDirection: Axis.horizontal,
             itemCount: childCategory.childCategoryList.length,
             itemBuilder: (context, index) {
-              return _rightInkWell(childCategory.childCategoryList[index]);
+              return _rightInkWell(
+                  index, childCategory.childCategoryList[index]);
             },
           ),
         );
@@ -153,14 +156,22 @@ class _RightCategoryNavState extends State<RightCategoryNav> {
     );
   }
 
-  Widget _rightInkWell(BxMallSubDto item) {
+  Widget _rightInkWell(int index, BxMallSubDto item) {
+    bool isClick = false;
+    isClick = (index == Provide.value<ChildCategory>(context).childIndex)
+        ? true
+        : false;
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        Provide.value<ChildCategory>(context).changeChildIndex(index);
+      },
       child: Container(
         padding: EdgeInsets.fromLTRB(5, 10, 5, 10),
         child: Text(
           item.mallSubName,
-          style: TextStyle(fontSize: ScreenUtil().setSp(28)),
+          style: TextStyle(
+              fontSize: ScreenUtil().setSp(28),
+              color: isClick ? Colors.pink : Colors.black),
         ),
       ),
     );
@@ -185,7 +196,6 @@ class _CategoryGoodsListState extends State<CategoryGoodsList> {
       builder: (context, child, data) {
         return Expanded(
           child: Container(
-            height: ScreenUtil().setHeight(1000),
             width: ScreenUtil().setWidth(570),
             child: ListView.builder(
               itemCount: data.goodsList.length,

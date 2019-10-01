@@ -4,7 +4,7 @@ import '../config/service_url.dart';
 
 Future request(url, {formData}) async {
   try {
-    print('开始获取数据................');
+    // print('开始获取数据................');
     Response response;
     Dio dio = Dio();
     dio.options.contentType = "application/x-www-form-urlencoded";
