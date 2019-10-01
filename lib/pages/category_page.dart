@@ -335,5 +335,3 @@ class _CategoryGoodsListState extends State<CategoryGoodsList> {
     });
   }
 }
-
-class RefreshFooterState {}
